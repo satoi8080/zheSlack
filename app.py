@@ -31,6 +31,25 @@ def update_slack_status(status_text, status_emoji):
     print(response)
 
 
+def update_slack_status_web_api(status_text, status_emoji):
+    base_url = 'https://slack.com/api/users.profile.set'
+    headers = {
+        'Content-type': 'application/json; charset=utf-8',
+        'Authorization': f'Bearer {config.User_OAuth_Token}'
+    }
+    response = requests.post(
+        base_url,
+        headers=headers,
+        data=json.dumps({
+            'profile': {
+                'status_text': status_text,
+                'status_emoji': status_emoji
+            }
+        })
+    )
+    print(response.text)
+
+
 def slack_bot_webhook(text: str = ''):
     url = config.Bot_Webhook_URL
     data = json.dumps({
@@ -55,7 +74,8 @@ def handle(client: RTMClient, event: dict):
 
 
 if __name__ == '__main__':
-    send_message('Hello, world!')  # To certain channel
-    update_slack_status('Hello, world!', ':rocket:')
-    slack_bot_webhook('Hello, world!')  # To certain user or channel
-    rtm_client.start()
+    # send_message('Hello, world!')  # To certain channel
+    # update_slack_status('Hello, world!', ':rocket:')
+    update_slack_status_web_api('Hello, Slack Web API!', ':rocket:')
+    # slack_bot_webhook('Hello, world!')  # To certain user or channel
+    # rtm_client.start()
